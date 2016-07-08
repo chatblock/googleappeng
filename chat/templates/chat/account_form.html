@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% load bootstrap %}
+{% block main %}
+    {% if object %}
+        <h2>Edit {{ object.username }}</h2>
+    {% else %}
+        <h2>Create</h2>
+    {% endif %}
+    <form role="form">
+    <legend>Add Resident</legend>
+    {% csrf_token %}
+    {{ form|bootstrap }}
+    <a href="/account/create/apartment/">Add apartment</a>
+    <div class="form-group">
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </div>
+</form>
+  
+    
+{% endblock %}

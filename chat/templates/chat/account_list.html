@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block main %}
+    {% for resident in object_list %}
+        <p> 
+            {{ resident.name }} <a href="{% url 'resident_detail' resident.pk %}">detail...</a>
+        </p>
+    {% endfor %}
+
+    <a href="{% url 'resident_create' %}">Add...</a>
+{% endblock %}

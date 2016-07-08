@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <!-- <link rel="shortcut icon" href="/static/img/favicon.png"> -->
+
+        <!-- Datatables -->
+        <link rel="stylesheet" media="screen" href="/static/css/DT_bootstrap.css">
+            <!-- Bootstrap -->
+        <link rel="stylesheet" media="screen" href="/static/css/bootstrap.min.css">
+        <link rel="stylesheet" media="screen" href="/static/css/bootstrap-theme.min.css">
+
+        <!-- Bootstrap Admin Theme -->
+        <link rel="stylesheet" media="screen" href="/static/css/bootstrap-admin-theme.css">
+        <link rel="stylesheet" media="screen" href="/static/css/bootstrap-admin-theme-change-size.css">
+    <title>{% block title %}Chat{% endblock %}</title>
+      <link rel="stylesheet" href="{{ STATIC_URL }}css/chat.css">
+    {% block extra_css %}{% endblock %}
+    <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+    <script>
+        var showForm = function() {
+            $('form').slideDown(function() {
+                $('form input[type="text"]').focus();
+            });
+        };
+    </script>
+    {% block extra_js %}{% endblock %}
+    <style type="text/css">
+      /* Move down content because we have a fixed navbar that is 50px tall */
+      body {
+        padding-top: 50px;
+        padding-bottom: 20px;
+      }
+ </style>
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="/static/js/html5shiv.js"></script>
+      <script src="/static/js/respond.min.js"></script>
+    <![endif]-->
+  </head>
+
+  <body class="bootstrap-admin-with-small-navbar">
+
+    <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container" >
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="/">Chatblock</a>
+        </div>
+        <div class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            <li class="active"><a href="/">Home</a></li>
+          </ul>
+          <form class="navbar-form navbar-right">
+
+            {% if not user.is_authenticated %}
+                <a href="/accounts/login/" class="btn btn-success">Login</a>
+            {% endif %}
+
+            {% if user.is_authenticated %}
+             <a >  Hello {{user.username}} </a>   <a href="{% url "django.contrib.auth.views.logout" %}?next=/" class="btn btn-success">Logout</a>
+            {% endif %}
+
+          </form>
+        </div><!--/.navbar-collapse -->
+      </div>
+    </div>
+   <div id="fixeddiv" class="container" >
+            <!-- left, vertical navbar & content -->
+            <div class="row">
+                <!-- left, vertical navbar -->
+                <div  class="col-md-2 bootstrap-admin-col-left " >
+                    <ul class="nav navbar-collapse collapse bootstrap-admin-navbar-side" style= "position:fixed;">
+                   
+                      {% if user.role == "1"%}  <li>
+                            <a href="#"><i class="glyphicon glyphicon-chevron-down"></i> USERS</a>
+                            <ul class="nav navbar-collapse bootstrap-admin-navbar-side">
+                                <li><a href="/account/create/"><button class="btn btn-sm btn-primary">
+                                                            <i class="glyphicon glyphicon-pencil"></i>
+                                                            Add
+                                                        </button></a></li>
+                                   </ul>
+                        </li>
+                           <li><a href="#"><i class="glyphicon glyphicon-chevron-down"></i> APARTMENT</a>
+                            <ul class="nav navbar-collapse bootstrap-admin-navbar-side">
+                                <li><a href="/account/create/apartment/">
+                                                        <button class="btn btn-sm btn-primary">
+                                                            <i class="glyphicon glyphicon-pencil"></i>
+                                                            Add
+                                                        </button>
+                                                    </a></li>
+                                   </ul>
+                        </li>
+                       {%endif%}
+                       
+                         <li>
+                            <a href="#"><i class="glyphicon glyphicon-chevron-down"></i> CHATROOM</a>
+                            <ul class="nav navbar-collapse bootstrap-admin-navbar-side">
+                                <li><a href="/#createchatroom"><button class="btn btn-sm btn-primary">
+                                                            <i class="glyphicon glyphicon-pencil"></i>
+                                                            Add Room
+                                                        </button></a></li>
+                                   </ul>
+                        </li>
+                          
+                         
+                    </ul>
+                </div>
+
+                <!-- content -->
+                <div class="col-md-10">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="page-header">
+								
+                                <h1>{%block heading%}{%endblock%}</h1>
+                            </div>
+                        </div>
+                    </div>
+
+             
+
+                                   
+									 {% block main %}{% endblock %}
+    {% block form %}{% endblock %}
+                   
+                   
+
+                </div>
+            </div>
+        </div>
+
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+           <script type="text/javascript" src="http://code.jquery.com/jquery-2.0.3.min.js"></script>
+    
+        <script type="text/javascript" src="/static/js/twitter-bootstrap-hover-dropdown.min.js"></script>
+        <script type="text/javascript" src="/static/js/bootstrap-admin-theme-change-size.js"></script>
+        <script type="text/javascript" src="/static/vendors/datatables/js/jquery.dataTables.min.js"></script>
+        <script type="text/javascript" src="/static/js/DT_bootstrap.js"></script>
+    
+  </body>
+</html>

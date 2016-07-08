@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+
+{% block title %}{{ room }}{% endblock %}
+
+{% block extra_js %}
+<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+<script src="http://ajax.microsoft.com/ajax/jquery.templates/beta1/jquery.tmpl.min.js"></script>
+<script src="{{ STATIC_URL|default:MEDIA_URL }}js/socket.io.js"></script>
+<script>WEB_SOCKET_SWF_LOCATION="{{ STATIC_URL }}flashsocket/WebSocketMain.swf"; window.room = "{{ room.id }}";</script>
+<script src="{{ STATIC_URL }}js/chat.js"></script>
+{% endblock %}
+{%block heading%}{{room.name}} Chatroom{%endblock%}
+{% block main %}
+
+   <div class="col-lg-10">
+	   
+<div id="chat">
+  <div id="nickname">
+    <form id="set-nickname" class="wrap">
+		<p> Your User name</p>
+      <input id="nick" value={{user}}>
+      <p id="nickname-err">Nickname already in use</p>
+  </form>
+  </div>
+  <div id="connecting">
+    <div class="wrap">Connecting to socket.io server</div>
+  </div>
+  <div id="messages">
+    <div id="nicknames"><span>Online:</span></div>
+    <div id="lines">{%for his in history%}
+    <b>{{his.created_by}} ({{his.created}}):</b> {{his.text}}<br>
+    {%endfor%}</div>
+  </div>
+  <form id="send-message">
+    <input id="message">
+    <button>Send</button>
+  </form>
+</div>
+
+<h2>Chat description</h2>
+<p>{{room.description}}</p>
+
+<script>
+	$(function() {
+$( "#set-nickname" ).submit();
+});
+</script>
+</div>
+
+   <div class="col-lg-2">
+	   
+	   <p><div class="ordvalue" style="float:left; padding-right:5px;"></div> Orders for this need </p>
+	   <button class="btn btn-sm btn-primary" id="like" name="{{ room.slug }}"> Place Order  </button>
+
+</div>
+<script>
+	$('.ordvalue').html(" " + {{room.likes.count}} + " ");
+$('#like').click(function(){
+      $.ajax({
+               type: "POST",
+               url: "{% url 'like' %}",
+               data: {'slug': $(this).attr('name'), 'csrfmiddlewaretoken': '{{ csrf_token }}'},
+               dataType: "json",
+               success: function(response) {
+                      alert(response.message);
+                       $('.ordvalue').html(" " + response.likes_count + " ");
+                },
+                error: function(rs, e) {
+                       alert(rs.responseText);
+                }
+          }); 
+    })
+</script>
+{% endblock %}

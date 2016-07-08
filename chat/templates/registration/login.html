@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <!-- <link rel="shortcut icon" href="/static/img/favicon.png"> -->
+
+        <!-- Datatables -->
+        <link rel="stylesheet" media="screen" href="/static/css/DT_bootstrap.css">
+            <!-- Bootstrap -->
+        <link rel="stylesheet" media="screen" href="/static/css/bootstrap.min.css">
+        <link rel="stylesheet" media="screen" href="/static/css/bootstrap-theme.min.css">
+
+        <!-- Bootstrap Admin Theme -->
+        <link rel="stylesheet" media="screen" href="/static/css/bootstrap-admin-theme.css">
+        <link rel="stylesheet" media="screen" href="/static/css/bootstrap-admin-theme-change-size.css">
+    <title>{% block title %}Chat{% endblock %}</title>
+      <link rel="stylesheet" href="{{ STATIC_URL }}css/chat.css">
+    {% block extra_css %}{% endblock %}
+    <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+    <script>
+        var showForm = function() {
+            $('form').slideDown(function() {
+                $('form input[type="text"]').focus();
+            });
+        };
+    </script>
+    {% block extra_js %}{% endblock %}
+    <style type="text/css">
+      /* Move down content because we have a fixed navbar that is 50px tall */
+      body {
+        padding-top: 50px;
+        padding-bottom: 20px;
+      }
+    </style>
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="/static/js/html5shiv.js"></script>
+      <script src="/static/js/respond.min.js"></script>
+    <![endif]-->
+  </head>
+
+  <body class="bootstrap-admin-with-small-navbar">
+
+    <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="/">Chatblock</a>
+        </div>
+        <div class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            <li class="active"><a href="/">Home</a></li>
+          </ul>
+          <form class="navbar-form navbar-right">
+
+            {% if not user.is_authenticated %}
+                <a href="/accounts/login/" class="btn btn-success">Login</a>
+            {% endif %}
+
+            {% if user.is_authenticated %}
+                <a href="/accounts/profile/" class="btn btn-default">Profile</a>
+                <a href="{% url "django.contrib.auth.views.logout" %}?next=/" class="btn btn-success">Logout</a>
+            {% endif %}
+
+          </form>
+        </div><!--/.navbar-collapse -->
+      </div>
+    </div>
+   <div class="container">
+            <!-- left, vertical navbar & content -->
+            <div class="row">
+
+{% if form.errors and not form.non_field_errors and not form.this_is_the_login_form.errors %}
+<p class="errornote">
+{% if form.errors.items|length == 1 %}Please correct the error below.{% else %}Please correct the errors below.{% endif %}
+</p>
+{% endif %}
+
+{% if form.non_field_errors or form.this_is_the_login_form.errors %}
+{% for error in form.non_field_errors|add:form.this_is_the_login_form.errors %}
+<p class="errornote">
+    {{ error }}
+</p>
+{% endfor %}
+{% endif %}
+
+<div id="content-main">
+<form action="{{ app_path }}" method="post" id="login-form">{% csrf_token %}
+  
+  <br><h2>You must login to create chatrooms or post messages</h2><br>
+
+  <div class="form-row">
+    {% if not form.this_is_the_login_form.errors %}{{ form.username.errors }}{% endif %}
+    <label for="id_username" class="required">{{ form.username.label }}:</label> {{ form.username }}
+  </div>
+  <div class="form-row">
+    {% if not form.this_is_the_login_form.errors %}{{ form.password.errors }}{% endif %}
+    <label for="id_password" class="required">Password:</label> {{ form.password }}
+    <input type="hidden" name="this_is_the_login_form" value="1" />
+    <input type="hidden" name="next" value="{{ next }}" />
+  </div>
+  {# {% url 'admin_password_reset' as password_reset_url %} #}
+  {% if password_reset_url %}
+  <div class="password-reset-link">
+    <a href="{{ password_reset_url }}">Forgotten your password or username?</a>
+  </div>
+  {% endif %}
+  <br>
+   <div class="form-group">
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </div>
+</form>
+
+<script type="text/javascript">
+document.getElementById('id_username').focus()
+</script>
+</div>
+
+</div>
+</div>
+
+  </body>
+</html>
+
